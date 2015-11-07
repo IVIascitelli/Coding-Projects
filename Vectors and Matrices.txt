@@ -1,0 +1,57 @@
+
+// PART 1
+int is_toeplitz(int a[][N], int m) {
+    int i=0, j=0, toeplitz = 1;
+    for (i; i < (m-1); i++) {
+        for (j; j < (N-1); j++) {
+            if (a[i][j] != a[i+1][j+1])					      // The algorithm simply needs to check if the element down and to the right of it is the same
+                    toeplitz = 0;					      // If this condition is ever not true, or matrix is not a toeplitz matrix
+        }
+        j = 0;
+        printf("\n");
+            
+    }
+    printf("%d ", toeplitz);
+    return toeplitz;
+    
+}   
+
+// PART 2
+int is_diag_dom(int mat[][N]) {
+    int i = 0, j = 0, temp_sum = 0, diag = 0;
+    for (i; i < N; i++)   {                                                     // We are checking this N times
+        for (j; j < N; j++ )                                                    // For the j elements in the ith row...
+            temp_sum += mat[diag][j];                                           // ...add up elements into a temporary 
+        
+        if ((temp_sum - mat[i][diag]) > mat[i][diag])                           // If the total sum - diagonal element is < diagonal element....
+            return 0;                                                           // Return 0 and end the function
+        
+        diag++;                                                                 // If not, update diag position and try again
+    }
+    return 1;
+} 
+
+
+
+// PART 3
+void efficient(const int source[], int val[], int pos[], int size) {
+   int i = 0, k = 0, position = 0;                                              // position is an index number for where to post in val or pos
+   
+   for (i; i < size; i++) {                                                     // go through our array 'size' times
+       if (source[i] != 0) {                                                    // if the element is NOT equal to 0
+           val[position] = source[i];                                           // give the element to val
+           pos[position] = i;                                                   // give the position of the element to pos
+           k++; position++;                                                     // update k, update posting position
+       }
+   }
+}
+
+void reconstruct(int source[], int m, const int val[], const int pos[], int n) {
+    int i = 0, j = 0, new_array[m];
+    
+    for (i; i < m; i++)                                                         // create an array of, the same size as source
+        new_array[i] = 0;                                                       // and fill it with 0's
+    
+    for (j; j < n; j++)                                                         // now go through "length of pos/val" times (which is our value n)
+        new_array[pos[j]] = val[j];                                             // and everytime there is a value, update that position in new_array
+}                                                                               // this reconstructs our parse vector!

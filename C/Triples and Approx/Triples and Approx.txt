@@ -1,0 +1,33 @@
+// PART 1
+
+int main(void)
+{
+    int i, n, mult= 1; 
+    float add, accum=0; 
+    printf("Please enter the number of terms you wish to use:\n");              // Request number of terms we are using to approximate Pi
+    scanf("%d", &n);
+    for(i=0; i < n; i++)                                                        // Use a counted loop to do operations n times
+    {
+        printf("Accum = %f \n", accum);                                         // Print statement to show the approximation of Pi updating
+        add = 4.0 / (2.0 *i + 1);                                               // Our operation as described in the lab outline....
+        accum += (add*mult);                                                    // Update the value of our accumulator (which gets printed in line 22)
+        mult = -1 * mult;                                                       // Flip the sign of our next term
+    }
+    printf("The sum of the first %d numbers is %f \n", i, accum);               // Finish by showing our final approximation in accum
+    
+}
+
+// PART 2
+
+int main(void) {
+    int A, B, C, counter=0;
+    for (A=1; A <= 200; A++)                                                    // We use a triple for loop to increment through every possible integer
+        for (B=A; B <= 200; B++)                                                // B = A so that B never becomes less than A
+            for (C=1; C <= 200; C++) 
+                if (C == sqrt((A*A)+ (B*B))) {
+                  printf("Found a triple! SideA = %d , Side B = %d , Hypoteneuse = %d \n", A, B, C);            // Print a triple every time it is found
+                  counter++;                                                    // Counter to keep count of how many triples have been found
+                }
+    printf("I have found %d possible triples \n ", counter);                    // Let the user know how many triples have been found
+}
+
