@@ -52,7 +52,8 @@ logic 			TP_touch_en, TP_coord_en;
 logic 	[11:0]	TP_X_coord, TP_Y_coord;
 
 logic 	[9:0] 	Colourbar_X, Colourbar_Y;
-logic 	[7:0]	Colourbar_Red, Colourbar_Green, Colourbar_Blue;
+logic 	[7:0]		Colourbar_Red, Colourbar_Green, Colourbar_Blue;
+logic		[2:0]		RGB[7:0]
 
 logic 	[4:0] 	TP_position[7:0];
 
@@ -158,15 +159,61 @@ always_ff @(posedge Clock or negedge Resetn) begin
 		Colourbar_Red <= 8'h00; 
 		Colourbar_Green <= 8'h00;
 		Colourbar_Blue <= 8'h00;
+//		Colourbar_Red <= {8{Colourbar_X[5]}};
+//		Colourbar_Green = {8{Colourbar_X[6]}};
+//		Colourbar_Blue = {8{Colourbar_X[7]}};
 	end else begin
-		if({8{Colourbar_X[5]}} > 1) begin
-			Colourbar_Red <= 8'h01;
-			Colourbar_Blue <= 8'h01;
-			Colourbar_Green <= 8'h01;		
+		// Top section
+		if(Colourbar_Y < 10'd240) begin
+			// Region 0
+			if(10'd0 < Colourbar_X <= 10'd200) begin
+				Colourbar_Red <=
+				Colourbar_Blue <= 
+				Colourbar_Green <=
+			// Region 1
+			end else if (10'd200 < Colourbar_X <= 10'd400) begin
+				Colourbar_Red <=
+				Colourbar_Blue <= 
+				Colourbar_Green <=			
+			
+			// Region 2
+			end else if (10'd400 < ColourBar_X <= 10'd600) begin
+				Colourbar_Red <=
+				Colourbar_Blue <= 
+				Colourbar_Green <=			
+			
+			// Region 3
+			end else begin
+				Colourbar_Red <=
+				Colourbar_Blue <= 
+				Colourbar_Green <=			
+			
+			end		
+		// Bottom section
 		end else begin
-		   Colourbar_Red <= {8{Colourbar_X[5]}};
-			Colourbar_Green = {8{Colourbar_X[6]}};
-			Colourbar_Blue = {8{Colourbar_X[7]}};
+			// Region 4
+			if(10'd0 < Colourbar_X <= 10'd200) begin
+				Colourbar_Red <=
+				Colourbar_Blue <= 
+				Colourbar_Green <=			
+			// Region 5
+			end else if (10'd200 < Colourbar_X <= 10'd400) begin
+				Colourbar_Red <=
+				Colourbar_Blue <= 
+				Colourbar_Green <=			
+			
+			// Region 6
+			end else if (10'd400 < ColourBar_X <= 10'd600) begin
+				Colourbar_Red <=
+				Colourbar_Blue <= 
+				Colourbar_Green <=			
+			
+			// Region 7
+			end else begin
+				Colourbar_Red <=
+				Colourbar_Blue <= 
+				Colourbar_Green <=			
+			end				
 		end
 	end
 end
