@@ -53,7 +53,7 @@ logic 	[11:0]	TP_X_coord, TP_Y_coord;
 
 logic 	[9:0] 	Colourbar_X, Colourbar_Y;
 logic 	[7:0]		Colourbar_Red, Colourbar_Green, Colourbar_Blue;
-logic		[2:0]		RGB[7:0]
+logic		[2:0]		RGB[7:0];
 
 logic 	[4:0] 	TP_position[7:0];
 
@@ -156,68 +156,62 @@ LCD_Data_Controller LCD_Data_unit (
 // State machine for generating the colour bars
 always_ff @(posedge Clock or negedge Resetn) begin
 	if (~Resetn) begin
-		Colourbar_Red <= 8'h00; 
-		Colourbar_Green <= 8'h00;
-		Colourbar_Blue <= 8'h00;
-//		Colourbar_Red <= {8{Colourbar_X[5]}};
-//		Colourbar_Green = {8{Colourbar_X[6]}};
-//		Colourbar_Blue = {8{Colourbar_X[7]}};
+	Colourbar_Red <= 8'h00;
+	Colourbar_Green <= 8'h00;
+	Colourbar_Blue <= 8'h00;
+	// Colourbar_Red <= {8{Colourbar_X[5]}};
+	// Colourbar_Green = {8{Colourbar_X[6]}};
+	// Colourbar_Blue = {8{Colourbar_X[7]}};
 	end else begin
 		// Top section
 		if(Colourbar_Y < 10'd240) begin
 			// Region 0
-			if(10'd0 < Colourbar_X <= 10'd200) begin
-				Colourbar_Red <=
-				Colourbar_Blue <= 
-				Colourbar_Green <=
+			if(10'd0 < Colourbar_X && Colourbar_X <= 10'd200) begin
+				Colourbar_Red <= {8{RGB[0][0]}};
+				Colourbar_Blue <= {8{RGB[0][1]}};
+				Colourbar_Green <= {8{RGB[0][2]}};
 			// Region 1
-			end else if (10'd200 < Colourbar_X <= 10'd400) begin
-				Colourbar_Red <=
-				Colourbar_Blue <= 
-				Colourbar_Green <=			
-			
+			end else if (10'd200 < Colourbar_X && Colourbar_X <= 10'd400) begin
+				Colourbar_Red <= {8{RGB[1][0]}};
+				Colourbar_Blue <= {8{RGB[1][1]}};
+				Colourbar_Green <= {8{RGB[1][2]}};
 			// Region 2
-			end else if (10'd400 < ColourBar_X <= 10'd600) begin
-				Colourbar_Red <=
-				Colourbar_Blue <= 
-				Colourbar_Green <=			
-			
+			end else if (10'd400 < Colourbar_X && Colourbar_X <= 10'd600) begin
+				Colourbar_Red <= {8{RGB[2][0]}};
+				Colourbar_Blue <= {8{RGB[2][1]}};
+				Colourbar_Green <= {8{RGB[2][2]}};
 			// Region 3
 			end else begin
-				Colourbar_Red <=
-				Colourbar_Blue <= 
-				Colourbar_Green <=			
-			
-			end		
+				Colourbar_Red <= {8{RGB[3][0]}};
+				Colourbar_Blue <= {8{RGB[3][1]}};
+				Colourbar_Green <= {8{RGB[3][2]}};
+			end
 		// Bottom section
 		end else begin
 			// Region 4
-			if(10'd0 < Colourbar_X <= 10'd200) begin
-				Colourbar_Red <=
-				Colourbar_Blue <= 
-				Colourbar_Green <=			
+			if(10'd0 < Colourbar_X && Colourbar_X <= 10'd200) begin
+				Colourbar_Red <= {8{RGB[4][0]}};
+				Colourbar_Blue <= {8{RGB[4][1]}};
+				Colourbar_Green <= {8{RGB[4][2]}};
 			// Region 5
-			end else if (10'd200 < Colourbar_X <= 10'd400) begin
-				Colourbar_Red <=
-				Colourbar_Blue <= 
-				Colourbar_Green <=			
-			
+			end else if (10'd200 < Colourbar_X && Colourbar_X <= 10'd400) begin
+				Colourbar_Red <= {8{RGB[5][0]}};
+				Colourbar_Blue <= {8{RGB[5][1]}};
+				Colourbar_Green <= {8{RGB[5][2]}};
 			// Region 6
-			end else if (10'd400 < ColourBar_X <= 10'd600) begin
-				Colourbar_Red <=
-				Colourbar_Blue <= 
-				Colourbar_Green <=			
-			
+			end else if (10'd400 < Colourbar_X && Colourbar_X <= 10'd600) begin
+				Colourbar_Red <= {8{RGB[6][0]}};
+				Colourbar_Blue <= {8{RGB[6][1]}};
+				Colourbar_Green <= {8{RGB[6][2]}};
 			// Region 7
 			end else begin
-				Colourbar_Red <=
-				Colourbar_Blue <= 
-				Colourbar_Green <=			
-			end				
+				Colourbar_Red <= {8{RGB[7][0]}};
+				Colourbar_Blue <= {8{RGB[7][1]}};
+				Colourbar_Green <= {8{RGB[7][2]}};
+			end
 		end
 	end
 end
-
 // Controller for the TP on the LTM
 Touch_Panel_Controller Touch_Panel_unit(
 	.Clock_50MHz(Clock),
@@ -239,6 +233,14 @@ Touch_Panel_Controller Touch_Panel_unit(
 // and displaying them on the seven segment displays
 always_ff @(posedge Clock or negedge Resetn) begin
 	if (~Resetn) begin
+		RGB[0] <= 3'b000;
+		RGB[1] <= 3'b001;
+		RGB[2] <= 3'b010;
+		RGB[3] <= 3'b011;
+		RGB[4] <= 3'b100;
+		RGB[5] <= 3'b101;
+		RGB[6] <= 3'b110;
+		RGB[7] <= 3'b111;
 		TP_position[0] <= 5'h00;
 		TP_position[1] <= 5'h00;
 		TP_position[2] <= 5'h00;
@@ -249,19 +251,26 @@ always_ff @(posedge Clock or negedge Resetn) begin
 		TP_position[7] <= 5'h00;
 	end else begin
 		if (TP_coord_en) begin
-			TP_position[0][3:0] <= TP_Y_coord[3:0];
-			TP_position[1][3:0] <= TP_Y_coord[7:4];
-			TP_position[2][3:0] <= TP_Y_coord[11:8];
-			TP_position[4][3:0] <= TP_X_coord[3:0];
-			TP_position[5][3:0] <= TP_X_coord[7:4];
-			TP_position[6][3:0] <= TP_X_coord[11:8];
+			TP_position[0][3:0] <= 0;
+			TP_position[1][3:0] <= 0;
+			TP_position[2][3:0] <= 0;
+			TP_position[4][3:0] <= 0;
+			TP_position[5][3:0] <= 0;
+			TP_position[6][3:0] <= {TP_Y_coord[11], TP_X_coord[11:10]};
+
+//			TP_position[0][3:0] <= TP_Y_coord[3:0];
+//			TP_position[1][3:0] <= TP_Y_coord[7:4];
+//			TP_position[2][3:0] <= TP_Y_coord[11:8];
+//			TP_position[4][3:0] <= TP_X_coord[3:0];
+//			TP_position[5][3:0] <= TP_X_coord[7:4];
+//			TP_position[6][3:0] <= TP_X_coord[11:8];
 		end
-		TP_position[0][4] <= TP_touch_en;
-		TP_position[1][4] <= TP_touch_en;
-		TP_position[2][4] <= TP_touch_en;
-		TP_position[4][4] <= TP_touch_en;
-		TP_position[5][4] <= TP_touch_en;
-		TP_position[6][4] <= TP_touch_en;
+			TP_position[0][4] <= TP_touch_en;
+			TP_position[1][4] <= TP_touch_en;
+			TP_position[2][4] <= TP_touch_en;
+			TP_position[4][4] <= TP_touch_en;
+			TP_position[5][4] <= TP_touch_en;
+			TP_position[6][4] <= TP_touch_en;
 	end
 end
 
