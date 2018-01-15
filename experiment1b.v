@@ -56,6 +56,7 @@ logic 	[7:0]		Colourbar_Red, Colourbar_Green, Colourbar_Blue;
 logic		[2:0]		RGB[7:0];
 
 logic 	[4:0] 	TP_position[7:0];
+logic 				TP_coord_en_buff;
 
 assign Clock = CLOCK_50_I;
 assign Resetn = SWITCH_I[17];
@@ -249,15 +250,27 @@ always_ff @(posedge Clock or negedge Resetn) begin
 		TP_position[5] <= 5'h00;
 		TP_position[6] <= 5'h00;
 		TP_position[7] <= 5'h00;
-	end else begin
-		if (TP_coord_en) begin
+	end else 
+		TP_coord_en_buff <= TP_coord_en;
+		if (TP_coord_en && ~TP_coord_en_buff) begin
 			TP_position[0][3:0] <= 0;
 			TP_position[1][3:0] <= 0;
 			TP_position[2][3:0] <= 0;
 			TP_position[4][3:0] <= 0;
 			TP_position[5][3:0] <= 0;
 			TP_position[6][3:0] <= {TP_Y_coord[11], TP_X_coord[11:10]};
-
+			
+			case ({TP_Y_coord[11], TP_X_coord[11:10]})
+				3'd0 : RGB[0] <= RGB[0] + 1'd1;
+				3'd1 : RGB[1] <= RGB[1] + 1'd1;
+				3'd2 : RGB[2] <= RGB[2] + 1'd1;
+				3'd3 : RGB[3] <= RGB[3] + 1'd1;
+				3'd4 : RGB[4] <= RGB[4] + 1'd1;
+				3'd5 : RGB[5] <= RGB[5] + 1'd1;
+				3'd6 : RGB[6] <= RGB[6] + 1'd1;
+				3'd7 : RGB[7] <= RGB[7] + 1'd1;
+			endcase			
+			
 //			TP_position[0][3:0] <= TP_Y_coord[3:0];
 //			TP_position[1][3:0] <= TP_Y_coord[7:4];
 //			TP_position[2][3:0] <= TP_Y_coord[11:8];
@@ -272,16 +285,6 @@ always_ff @(posedge Clock or negedge Resetn) begin
 			TP_position[5][4] <= TP_touch_en;
 			TP_position[6][4] <= TP_touch_en;
 			
-			case ({TP_Y_coord[11], TP_X_coord[11:10]})
-			3'd0 : RGB[0] <= RGB[0] + 1'd1;
-			3'd1 : RGB[1] <= RGB[1] + 1'd1;
-			3'd2 : RGB[2] <= RGB[2] + 1'd1;
-			3'd3 : RGB[3] <= RGB[3] + 1'd1;
-			3'd4 : RGB[4] <= RGB[4] + 1'd1;
-			3'd5 : RGB[5] <= RGB[5] + 1'd1;
-			3'd6 : RGB[6] <= RGB[6] + 1'd1;
-			3'd7 : RGB[7] <= RGB[7] + 1'd1;
-			endcase
 	end
 end
 
